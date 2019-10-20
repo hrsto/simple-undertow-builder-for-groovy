@@ -1,0 +1,15 @@
+plugins {
+    id 'groovy'
+}
+
+dependencies {
+    compile "org.codehaus.groovy:groovy-all:${groovyVersion}"
+    compile "io.undertow:undertow-core:${undertowVersion}"
+    compile "io.undertow:undertow-servlet:${undertowVersion}"
+    compile "org.jboss.xnio:xnio-api:${xnioVersion}"
+    compile "org.jboss.xnio:xnio-nio:${xnioVersion}"
+}
+
+repositories {
+    mavenCentral()
+}
