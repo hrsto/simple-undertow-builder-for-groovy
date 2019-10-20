@@ -13,3 +13,7 @@ dependencies {
 repositories {
     mavenCentral()
 }
+
+groovydoc {
+    destinationDir new File("${project.rootDir}/docs")
+}
