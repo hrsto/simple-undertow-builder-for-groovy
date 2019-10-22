@@ -4,7 +4,17 @@ Easily build configurable [Undertow](https://www.undertow.io) servers with multi
 
 ## Usage
 
-Get the dependency and then:
+Get the dependency via Maven with coords:
+
+```xml
+<dependency>
+  <groupId>com.webarity</groupId>
+  <artifactId>simple-undertow-builder-for-groovy</artifactId>
+  <version>1.0.0</version>
+</dependency>
+```
+
+and then:
 
 ```groovy
 new UndertowBuilder('127.0.0.1', 8080)

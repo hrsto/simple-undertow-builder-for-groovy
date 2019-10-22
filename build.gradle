@@ -1,9 +1,14 @@
 plugins {
     id 'groovy'
+    id 'maven-publish'
+    id 'signing'
 }
 
+version = '1.0.0'
+group = 'com.webarity'
+
 dependencies {
-    compile "org.codehaus.groovy:groovy-all:${groovyVersion}"
+    compile "org.codehaus.groovy:groovy-all:2.5.8"
     compile "io.undertow:undertow-core:${undertowVersion}"
     compile "io.undertow:undertow-servlet:${undertowVersion}"
     compile "org.jboss.xnio:xnio-api:${xnioVersion}"
@@ -16,4 +21,67 @@ repositories {
 
 groovydoc {
     destinationDir new File("${project.rootDir}/docs")
+}
+
+clean {
+    delete "${project.rootDir}/docs"
+}
+
+task sourcesForPublication(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+task groovydocForPublication(type: Jar, dependsOn: groovydoc) {
+    archiveClassifier = 'javadoc'
+    from groovydoc.destinationDir
+}
+
+publishing {
+    publications {
+        thing(MavenPublication) {
+            from components.java
+            artifact groovydocForPublication
+            artifact sourcesForPublication
+
+            artifactId = 'simple-undertow-builder-for-groovy'
+
+            pom {
+                name = 'Simple Undertow builder for Groovy'
+                description = 'Easily build configurable Undertow servers with multiple deployments in Groovy.'
+                url = 'https://www.webarity.com/simple-undertow-builder-for-groovy/'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'hrsto'
+                        name = 'Hristo Y. Stoyanov'
+                        email = 'sto.hristo@gmail.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:github.com:hrsto/simple-undertow-builder-for-groovy.git'
+                    developerConnection = 'scm:git:ssh://github.com:hrsto/simple-undertow-builder-for-groovy.git'
+                    url = 'https://github.com/hrsto/simple-undertow-builder-for-groovy'
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            url = 'https://oss.sonatype.org/service/local/staging/deploy/maven2'
+            credentials {
+                username sonatypeUsername
+                password sonatypePassword
+            }
+        }
+    }
+}
+
+signing {
+    sign publishing.publications
 }
